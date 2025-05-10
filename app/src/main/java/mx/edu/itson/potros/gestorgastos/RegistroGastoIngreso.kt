@@ -2,19 +2,9 @@ package mx.edu.itson.potros.gestorgastos
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 
 class RegistroGastoIngreso : AppCompatActivity() {
     private lateinit var nombreUsuario: String
@@ -25,9 +15,7 @@ class RegistroGastoIngreso : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registro_gasto_ingreso)
 
-        // Obtener usuario desde Intent
-        nombreUsuario = intent.getStringExtra("nombre_usuario") ?: ""
-
+        // Obtener referencias de UI
         val radioTipo = findViewById<RadioGroup>(R.id.radio_group_tipo_transaccion)
         val radioPago = findViewById<RadioGroup>(R.id.radio_group_tipo_pago)
         val etMonto = findViewById<EditText>(R.id.et_monto)
@@ -39,6 +27,34 @@ class RegistroGastoIngreso : AppCompatActivity() {
 
         etFecha.setOnClickListener { showDatePickerDialog() }
 
+        // Verificar si es modo edición
+        val modo = intent.getStringExtra("modo")
+        val idTransaccion = intent.getStringExtra("id")
+        nombreUsuario = intent.getStringExtra("nombre_usuario") ?: intent.getStringExtra("usuario") ?: ""
+
+        if (modo == "editar") {
+            btnGuardar.text = "Actualizar"
+            etMonto.setText(intent.getStringExtra("cantidad"))
+            etDescripcion.setText(intent.getStringExtra("descipcion"))
+            etCategoria.setText(intent.getStringExtra("categoria"))
+            etFecha.setText(intent.getStringExtra("fecha"))
+
+            val tipo = intent.getStringExtra("tipo")
+            if (tipo == "Ingreso") {
+                radioTipo.check(R.id.radio_ingreso)
+            } else {
+                radioTipo.check(R.id.radio_gasto)
+            }
+
+            val tipoPago = intent.getStringExtra("tipo_pago")
+            if (tipoPago == "Efectivo") {
+                radioPago.check(R.id.radio_efectivo)
+            } else if (tipoPago == "Tarjeta") {
+                radioPago.check(R.id.radio_tarjeta)
+            }
+        }
+
+        // Guardar o actualizar
         btnGuardar.setOnClickListener {
             val tipoSeleccionado = findViewById<RadioButton>(radioTipo.checkedRadioButtonId)?.text.toString()
             val tipoPagoSeleccionado = if (tipoSeleccionado == "Gasto")
@@ -50,14 +66,13 @@ class RegistroGastoIngreso : AppCompatActivity() {
             val categoria = if (tipoSeleccionado == "Gasto") etCategoria.text.toString().trim() else null
             val fecha = etFecha.text.toString().trim()
 
-            // Validación básica
+            // Validación
             if (cantidad.isEmpty() || descripcion.isEmpty() || fecha.isEmpty() ||
                 (tipoSeleccionado == "Gasto" && (categoria.isNullOrEmpty() || tipoPagoSeleccionado.isNullOrEmpty()))) {
                 Toast.makeText(this, "Por favor llena todos los campos obligatorios", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Guardar transacción
             val transaccion = Transaccion(
                 usuario = nombreUsuario,
                 cantidad = cantidad,
@@ -68,15 +83,28 @@ class RegistroGastoIngreso : AppCompatActivity() {
                 fecha = fecha
             )
 
-            dbRefTransacciones.push().setValue(transaccion)
+            if (modo == "editar" && !idTransaccion.isNullOrEmpty()) {
+                // Actualizar
+                dbRefTransacciones.child(idTransaccion).setValue(transaccion)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Transacción actualizada", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "Error al actualizar", Toast.LENGTH_SHORT).show()
+                    }
+            } else {
+                // Nuevo
+                dbRefTransacciones.push().setValue(transaccion)
+                Toast.makeText(this, "Transacción guardada", Toast.LENGTH_SHORT).show()
+            }
 
-            // Si es Gasto, guarda la categoría también
+            // Guardar categoría si es gasto
             if (!categoria.isNullOrEmpty()) {
                 dbRefCategorias.orderByChild("nombre").equalTo(categoria)
                     .addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
                             if (!snapshot.exists()) {
-                                // La categoría no existe, se guarda
                                 dbRefCategorias.push().setValue(Categoria(categoria))
                             }
                         }
@@ -87,8 +115,7 @@ class RegistroGastoIngreso : AppCompatActivity() {
                     })
             }
 
-            Toast.makeText(this, "Transacción guardada", Toast.LENGTH_SHORT).show()
-            finish() // o regresar a Principal
+            finish()
         }
 
         btnCancelar.setOnClickListener {
@@ -102,7 +129,6 @@ class RegistroGastoIngreso : AppCompatActivity() {
     }
 
     private fun onDateSelected(dia: Int, mes: Int, año: Int) {
-        val etFecha = findViewById<EditText>(R.id.et_fecha)
-        etFecha.setText("$dia/${mes + 1}/$año") // mes+1 porque Calendar empieza en 0
+        findViewById<EditText>(R.id.et_fecha).setText("$dia/${mes + 1}/$año")
     }
 }

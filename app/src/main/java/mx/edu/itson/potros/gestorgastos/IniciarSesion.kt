@@ -61,6 +61,7 @@ class IniciarSesion : AppCompatActivity() {
                         if (usuarioLogueado != null) {
                             val intent = Intent(this@IniciarSesion, Principal::class.java)
                             intent.putExtra("nombre_usuario", usuarioLogueado.nombre)
+                            intent.putExtra("correo_usuario", usuarioLogueado.correo)
                             startActivity(intent)
                             finish()
                         } else {
