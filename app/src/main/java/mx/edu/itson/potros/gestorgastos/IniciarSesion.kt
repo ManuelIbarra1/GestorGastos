@@ -50,17 +50,17 @@ class IniciarSesion : AppCompatActivity() {
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
-                        var loginExitoso = false
+                        var usuarioLogueado: Usuario? = null
                         for (userSnapshot in snapshot.children) {
                             val usuario = userSnapshot.getValue(Usuario::class.java)
                             if (usuario != null && usuario.contraseña == contraseña) {
-                                loginExitoso = true
+                                usuarioLogueado = usuario
                                 break
                             }
                         }
-                        if (loginExitoso) {
-                            // Éxito: ir a MenuPrincipal (o la pantalla correcta)
+                        if (usuarioLogueado != null) {
                             val intent = Intent(this@IniciarSesion, Principal::class.java)
+                            intent.putExtra("nombre_usuario", usuarioLogueado.nombre)
                             startActivity(intent)
                             finish()
                         } else {

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gris_claro"
+    android:orientation="vertical"
+    tools:context=".GraficaGastos">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="Gráfica de Gastos"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:layout_marginBottom="16dp">
+
+        <Spinner
+            android:id="@+id/spinner_filtro_fecha"
+            android:layout_width="160dp"
+            android:layout_height="48dp"
+            android:prompt="@string/prompt_filtrar_fecha"
+            android:background="@drawable/spinner_background"/>
+
+        <Spinner
+            android:id="@+id/spinner_filtro_categoria"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:prompt="@string/prompt_filtrar_categoria"
+            android:background="@drawable/spinner_background"
+            android:layout_marginStart="8dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <FrameLayout
+            android:id="@+id/container_grafica"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/btn_tipo_grafica"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cambiar Gráfica"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@drawable/boton"/>
+
+        <Button
+            android:id="@+id/btn_salir"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Salir"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@drawable/boton"/>
+    </LinearLayout>
+
+</LinearLayout>
