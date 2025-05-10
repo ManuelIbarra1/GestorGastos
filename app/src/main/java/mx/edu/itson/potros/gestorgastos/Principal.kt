@@ -64,6 +64,7 @@ class Principal : AppCompatActivity() {
                 for (transSnap in snapshot.children) {
                     try {
                         val transaccion = transSnap.getValue(Transaccion::class.java)
+                        transaccion?.id = transSnap.key  // ← Guardamos el ID de la transacción
                         if (transaccion != null &&
                             transaccion.tipo == "Gasto" &&
                             transaccion.usuario == nombreUsuario
@@ -74,7 +75,16 @@ class Principal : AppCompatActivity() {
                         Log.e("Principal", "Error al procesar transacción: ${e.message}")
                     }
                 }
-                recyclerView.adapter = GastoAdapter(listaGastos)
+                recyclerView.adapter = GastoAdapter(listaGastos) { transaccion ->
+                    transaccion.id?.let {
+                        transaccionesRef.child(it).removeValue().addOnSuccessListener {
+                            Log.d("Principal", "Transacción eliminada: $it")
+                        }.addOnFailureListener { error ->
+                            Log.e("Principal", "Error al eliminar: ${error.message}")
+                        }
+                    }
+                }
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -84,12 +94,15 @@ class Principal : AppCompatActivity() {
     }
 }
 
-class GastoAdapter(private val gastos: List<Transaccion>) :
-    RecyclerView.Adapter<GastoAdapter.GastoViewHolder>() {
+class GastoAdapter(
+    private val gastos: List<Transaccion>,
+    private val onEliminarClick: (Transaccion) -> Unit
+) : RecyclerView.Adapter<GastoAdapter.GastoViewHolder>() {
 
     inner class GastoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nombre: TextView = view.findViewById(R.id.tv_nombre_gasto)
         val monto: TextView = view.findViewById(R.id.tv_monto_gasto)
+        val btnEliminar: ImageView = view.findViewById(R.id.iv_borrar_gasto)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GastoViewHolder {
@@ -102,6 +115,9 @@ class GastoAdapter(private val gastos: List<Transaccion>) :
         val gasto = gastos[position]
         holder.nombre.text = gasto.descipcion
         holder.monto.text = "$${gasto.cantidad}"
+        holder.btnEliminar.setOnClickListener {
+            onEliminarClick(gasto)
+        }
     }
 
     override fun getItemCount(): Int = gastos.size

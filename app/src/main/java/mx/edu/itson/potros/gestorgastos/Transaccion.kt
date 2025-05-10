@@ -1,6 +1,7 @@
 package mx.edu.itson.potros.gestorgastos
 
-data class Transaccion(var usuario: String? = null,
+data class Transaccion(
+    var id: String? = null,var usuario: String? = null,
                        var cantidad: String? = null,
                        var descipcion: String? = null,
                        var tipo: String? = null,
