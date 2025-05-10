@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">GestorGastos</string>
+
+    <string name="eslogan">Gestiona tus gastos, simplifica tu vida</string>
+
+    <string name="correo_hint">Correo electrónico</string>
+    <string name="contraseña_hint">Contraseña</string>
+    <string name="nombre_hint">Nombre</string>
+    <string name="confirmar_contraseña_hint">Confirmar Contraseña</string>
+
+    <string name="btn_iniciar_sesion">Iniciar Sesión</string>
+    <string name="btn_registrate">Regístrate</string>
+    <string name="btn_volver">Volver</string>
+
+    <string name="prompt_filtrar_fecha">Filtrar por Fecha</string>
+    <string name="prompt_filtrar_categoria">Filtrar por Categoría</string>
+</resources>

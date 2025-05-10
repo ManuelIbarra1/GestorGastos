@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "88067708531",
+    "project_id": "gestorgastosdb",
+    "storage_bucket": "gestorgastosdb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:88067708531:android:9a6a9ddeb5ed51d5b63c06",
+        "android_client_info": {
+          "package_name": "mx.edu.itson.potros.gestorgastos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7yC83TTyGc7kN8awyco70r-vwx65-LFk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
