@@ -39,17 +39,17 @@ class Principal : AppCompatActivity() {
 
         // Navegación con botones
         findViewById<ImageView>(R.id.btn_agregar_presupuesto).setOnClickListener {
-            //startActivity(Intent(this, Presupuesto::class.java))
+            startActivity(Intent(this, Presupuesto::class.java))
         }
 
         findViewById<ImageView>(R.id.btn_editar_usuario).setOnClickListener {
-            //startActivity(Intent(this, Configuracion::class.java))
+            startActivity(Intent(this, Configuracion::class.java))
         }
 
         findViewById<Button>(R.id.btn_agregar_transaccion).setOnClickListener {
-            //val intent = Intent(this, RegistroGastoIngreso::class.java)
-            //intent.putExtra("nombre_usuario", nombreUsuario) // lo pasas para usarlo allá
-            //startActivity(intent)
+            val intent = Intent(this, RegistroGastoIngreso::class.java)
+            intent.putExtra("nombre_usuario", nombreUsuario) // lo pasas para usarlo allá
+            startActivity(intent)
         }
 
         findViewById<Button>(R.id.btn_ver_grafica).setOnClickListener {

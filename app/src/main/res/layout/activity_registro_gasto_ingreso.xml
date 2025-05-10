@@ -85,11 +85,15 @@
             android:textSize="16sp"
             android:layout_marginBottom="8dp"/>
 
-        <Spinner
-            android:id="@+id/spinner_categoria"
+        <EditText
+            android:id="@+id/et_categoria"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/spinner_background" />
+            android:layout_height="wrap_content"
+            android:hint="Categoría"
+            android:textColorHint="@color/black"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"/>
 
     </LinearLayout>
 
@@ -155,9 +159,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Seleccionar Fecha"
-            android:inputType="date"
             android:focusable="false"
-            android:clickable="true"
+            android:clickable="false"
             android:textColorHint="@color/black"
             android:textColor="@color/black"
             android:textSize="18sp" />
@@ -171,7 +174,7 @@
         android:text="Guardar"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:background="@drawable/boton_alt"/>
+        android:background="@drawable/boton"/>
 
     <Button
         android:id="@+id/btn_cancelar"
