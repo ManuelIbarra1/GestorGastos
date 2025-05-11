@@ -3,6 +3,8 @@ package mx.edu.itson.potros.gestorgastos
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +22,8 @@ class Principal : AppCompatActivity() {
     private var nombreUsuario: String = ""
     private var correoUsuario: String = ""
     private val listaTransacciones = mutableListOf<Transaccion>()
+    private lateinit var spinnerCategoria: Spinner
+    private lateinit var categorias: MutableList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,10 +37,37 @@ class Principal : AppCompatActivity() {
 
         transaccionesRef = FirebaseDatabase.getInstance().getReference("Transacciones")
 
-        cargarTransacciones()
+        spinnerCategoria = findViewById(R.id.spinner_categoria)
+        categorias = mutableListOf("Todas las categorías")
+        cargarCategorias()
+
+        findViewById<EditText>(R.id.et_buscar).addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                aplicarFiltros(s.toString(), spinnerCategoria.selectedItem.toString())
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        spinnerCategoria.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val texto = findViewById<EditText>(R.id.et_buscar).text.toString()
+                aplicarFiltros(texto, categorias[position])
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        findViewById<Button>(R.id.btn_agregar_transaccion).setOnClickListener {
+            val intent = Intent(this, RegistroGastoIngreso::class.java)
+            intent.putExtra("nombre_usuario", nombreUsuario)
+            startActivity(intent)
+        }
 
         findViewById<ImageView>(R.id.btn_agregar_presupuesto).setOnClickListener {
-            startActivity(Intent(this, Presupuesto::class.java))
+            val intent = Intent(this, Presupuestos::class.java)
+            intent.putExtra("nombre_usuario", nombreUsuario)
+            startActivity(intent)
         }
 
         findViewById<ImageView>(R.id.btn_editar_usuario).setOnClickListener {
@@ -46,15 +77,30 @@ class Principal : AppCompatActivity() {
             startActivityForResult(intent, 1)
         }
 
-        findViewById<ImageView>(R.id.btn_agregar_presupuesto).setOnClickListener {
-            val intent = Intent(this, Presupuestos::class.java)
-            intent.putExtra("nombre_usuario", nombreUsuario)
-            startActivity(intent)
-        }
-
         findViewById<Button>(R.id.btn_ver_grafica).setOnClickListener {
             startActivity(Intent(this, GraficaGastos::class.java))
         }
+
+        cargarTransacciones()
+    }
+
+    private fun cargarCategorias() {
+        val categoriasRef = FirebaseDatabase.getInstance().getReference("Categorias")
+        categoriasRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (snap in snapshot.children) {
+                    val nombre = snap.child("nombre").getValue(String::class.java)
+                    if (!nombre.isNullOrEmpty()) {
+                        categorias.add(nombre)
+                    }
+                }
+                val adapter = ArrayAdapter(this@Principal, android.R.layout.simple_spinner_item, categorias)
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinnerCategoria.adapter = adapter
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
 
     private fun cargarTransacciones() {
@@ -82,26 +128,36 @@ class Principal : AppCompatActivity() {
                     }
                 }
 
-                recyclerView.adapter = GastoAdapter(
-                    gastos = listaTransacciones,
-                    onEliminarClick = { transaccion ->
-                        transaccion.id?.let {
-                            transaccionesRef.child(it).removeValue()
-                        }
-                    },
-                    onEditarClick = { transaccion ->
-                        editarTransaccion(transaccion)
-                    }
-                )
-
                 findViewById<TextView>(R.id.tv_gastos_mes).text = "$%.2f".format(totalGastos)
                 findViewById<TextView>(R.id.tv_ingresos_mes).text = "$%.2f".format(totalIngresos)
+
+                val textoActual = findViewById<EditText>(R.id.et_buscar).text.toString()
+                val categoriaSeleccionada = spinnerCategoria.selectedItem?.toString() ?: "Todas las categorías"
+
+                aplicarFiltros(textoActual, categoriaSeleccionada)
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e("Principal", "Error al leer transacciones: ${error.message}")
             }
         })
+    }
+
+    private fun aplicarFiltros(texto: String, categoria: String) {
+        val filtro = texto.trim().lowercase()
+        val listaFiltrada = listaTransacciones.filter {
+            val descripcionCoincide = it.descipcion?.lowercase()?.startsWith(filtro) == true
+            val categoriaCoincide = categoria == "Todas las categorías" || it.categoria == categoria
+            descripcionCoincide && categoriaCoincide
+        }
+
+        recyclerView.adapter = GastoAdapter(
+            gastos = listaFiltrada,
+            onEliminarClick = { transaccion ->
+                transaccion.id?.let { transaccionesRef.child(it).removeValue() }
+            },
+            onEditarClick = { editarTransaccion(it) }
+        )
     }
 
     private fun editarTransaccion(transaccion: Transaccion) {
@@ -120,14 +176,11 @@ class Principal : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null) {
             val nuevoNombre = data.getStringExtra("nombre_usuario_actualizado")
             val nuevoCorreo = data.getStringExtra("correo_usuario_actualizado")
-
             if (!nuevoNombre.isNullOrEmpty()) nombreUsuario = nuevoNombre
             if (!nuevoCorreo.isNullOrEmpty()) correoUsuario = nuevoCorreo
-
             Toast.makeText(this, "Datos actualizados localmente", Toast.LENGTH_SHORT).show()
         }
     }
@@ -138,7 +191,6 @@ class GastoAdapter(
     private val onEliminarClick: (Transaccion) -> Unit,
     private val onEditarClick: (Transaccion) -> Unit
 ) : RecyclerView.Adapter<GastoAdapter.GastoViewHolder>() {
-
 
     inner class GastoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nombre: TextView = view.findViewById(R.id.tv_nombre_gasto)
@@ -157,12 +209,8 @@ class GastoAdapter(
         val gasto = gastos[position]
         holder.nombre.text = gasto.descipcion
         holder.monto.text = "$${gasto.cantidad}"
-        holder.btnEliminar.setOnClickListener {
-            onEliminarClick(gasto)
-        }
-        holder.btnEditar.setOnClickListener {
-            onEditarClick(gasto)
-        }
+        holder.btnEliminar.setOnClickListener { onEliminarClick(gasto) }
+        holder.btnEditar.setOnClickListener { onEditarClick(gasto) }
     }
 
     override fun getItemCount(): Int = gastos.size
