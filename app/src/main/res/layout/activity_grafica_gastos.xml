@@ -7,73 +7,116 @@
     android:layout_height="match_parent"
     android:background="@color/gris_claro"
     android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".GraficaGastos">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
         android:text="Gráfica de Gastos"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/black"
         android:gravity="center_horizontal"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp" />
 
-    <LinearLayout
+    <!-- Selección del tipo de gráfico -->
+    <RadioGroup
+        android:id="@+id/radio_group_tipo_grafica"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         android:layout_marginBottom="16dp">
 
-        <Spinner
-            android:id="@+id/spinner_filtro_fecha"
-            android:layout_width="160dp"
-            android:layout_height="48dp"
-            android:prompt="@string/prompt_filtrar_fecha"
-            android:background="@drawable/spinner_background"/>
-
-        <Spinner
-            android:id="@+id/spinner_filtro_categoria"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:prompt="@string/prompt_filtrar_categoria"
-            android:background="@drawable/spinner_background"
-            android:layout_marginStart="8dp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center">
-
-        <FrameLayout
-            android:id="@+id/container_grafica"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp">
-
-        <Button
-            android:id="@+id/btn_tipo_grafica"
+        <RadioButton
+            android:id="@+id/radio_por_fecha"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cambiar Gráfica"
+            android:text="Por Fecha"
+            android:textColor="@color/black" />
+
+        <RadioButton
+            android:id="@+id/radio_por_categoria"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Por Categoría"
+            android:textColor="@color/black"
+            android:checked="true" />
+    </RadioGroup>
+
+    <!-- Filtros: por fecha -->
+    <LinearLayout
+        android:id="@+id/filtro_fecha_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/et_fecha_inicio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Desde"
+            android:inputType="none"
+            android:focusable="false"
+            android:background="@drawable/spinner_background"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:padding="12dp" />
+
+        <EditText
+            android:id="@+id/et_fecha_fin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Hasta"
+            android:inputType="none"
+            android:focusable="false"
+            android:background="@drawable/spinner_background"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:layout_marginStart="8dp"
+            android:padding="12dp" />
+    </LinearLayout>
+
+    <!-- Filtro: por categoría -->
+    <Spinner
+        android:id="@+id/spinner_filtro_categoria"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/spinner_background"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Gráfico -->
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barChart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/white" />
+
+    <!-- Botones -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/btn_actualizar_grafica"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Actualizar"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:background="@drawable/boton"/>
+            android:background="@drawable/boton"
+            android:layout_marginEnd="8dp" />
 
         <Button
             android:id="@+id/btn_salir"
@@ -83,7 +126,6 @@
             android:text="Salir"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:background="@drawable/boton"/>
+            android:background="@drawable/boton" />
     </LinearLayout>
-
 </LinearLayout>

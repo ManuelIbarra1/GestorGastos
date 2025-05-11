@@ -78,7 +78,9 @@ class Principal : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btn_ver_grafica).setOnClickListener {
-            startActivity(Intent(this, GraficaGastos::class.java))
+            val intent = Intent(this, GraficaGastos::class.java)
+            intent.putExtra("nombre_usuario", nombreUsuario)
+            startActivity(intent)
         }
 
         cargarTransacciones()
