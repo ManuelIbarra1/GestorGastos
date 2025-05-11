@@ -8,13 +8,16 @@ import com.google.firebase.database.*
 
 class Presupuestos : AppCompatActivity() {
 
-    private val dbRef = FirebaseDatabase.getInstance().getReference("Presupuestos")
+    private lateinit var dbRef: DatabaseReference
     private lateinit var nombreUsuario: String
+    private var presupuestoExistenteKey: String? = null
+    private val categoriasAsignadas = mutableMapOf<String, String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_presupuestos)
 
+        // Referencias UI
         val etTotal = findViewById<EditText>(R.id.et_presupuesto_total)
         val rgTipo = findViewById<RadioGroup>(R.id.radio_group_tipo)
         val rgMetodo = findViewById<RadioGroup>(R.id.radio_group_metodo)
@@ -28,25 +31,26 @@ class Presupuestos : AppCompatActivity() {
         val btnVolver = findViewById<Button>(R.id.btn_volver_presupuesto)
         val containerDistribucion = findViewById<LinearLayout>(R.id.container_distribucion)
 
+        // Firebase
+        dbRef = FirebaseDatabase.getInstance().getReference("Presupuestos")
         nombreUsuario = intent.getStringExtra("nombre_usuario") ?: ""
-        val categoriasAsignadas = mutableMapOf<String, String>()
-        var presupuestoExistenteKey: String? = null
 
-        val categoriasRef = FirebaseDatabase.getInstance().getReference("Categorias")
-        categoriasRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val lista = mutableListOf<String>()
-                for (snap in snapshot.children) {
-                    snap.child("nombre").getValue(String::class.java)?.let { lista.add(it) }
+        // Cargar categorías al spinner
+        FirebaseDatabase.getInstance().getReference("Categorias")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val categorias = snapshot.children.mapNotNull {
+                        it.child("nombre").getValue(String::class.java)
+                    }
+                    val adapter = ArrayAdapter(this@Presupuestos, android.R.layout.simple_spinner_item, categorias)
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    spinner.adapter = adapter
                 }
-                val adapter = ArrayAdapter(this@Presupuestos, android.R.layout.simple_spinner_item, lista)
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinner.adapter = adapter
-            }
 
-            override fun onCancelled(error: DatabaseError) {}
-        })
+                override fun onCancelled(error: DatabaseError) {}
+            })
 
+        // Mostrar u ocultar sección de distribución
         rgTipo.setOnCheckedChangeListener { _, checkedId ->
             containerDistribucion.visibility = if (checkedId == R.id.radio_categorias) View.VISIBLE else View.GONE
         }
@@ -56,84 +60,43 @@ class Presupuestos : AppCompatActivity() {
             categoriasAsignadas.clear()
         }
 
-        btnAgregarCategoria.setOnClickListener {
-            val categoria = spinner.selectedItem?.toString()?.trim() ?: return@setOnClickListener
-            val valor = etValorCategoria.text.toString().trim()
-            if (valor.isEmpty()) return@setOnClickListener
-
-            val existente = layoutCategorias.findViewWithTag<LinearLayout>(categoria)
-            if (existente != null) layoutCategorias.removeView(existente)
-
-            categoriasAsignadas[categoria] = valor
-
-            val row = LinearLayout(this)
-            row.orientation = LinearLayout.HORIZONTAL
-            row.tag = categoria
-
-            val textView = TextView(this)
-            textView.text = "$categoria: $valor"
-            textView.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-
-            val deleteBtn = Button(this)
-            deleteBtn.text = "X"
-            deleteBtn.setOnClickListener {
-                layoutCategorias.removeView(row)
-                categoriasAsignadas.remove(categoria)
-            }
-
-            row.addView(textView)
-            row.addView(deleteBtn)
-            layoutCategorias.addView(row)
-            etValorCategoria.text.clear()
-        }
-
+        // Cargar presupuesto existente
         dbRef.orderByChild("usuario").equalTo(nombreUsuario)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (snap in snapshot.children) {
-                        val map = snap.value as? Map<*, *> ?: continue
                         presupuestoExistenteKey = snap.key
 
-                        val total = map["total"]?.toString() ?: "0"
-                        val distribucion = map["distribucion"]?.toString() ?: "Fija"
-                        val alerta = map["alerta"]?.toString() ?: ""
+                        val data = snap.value as? Map<*, *> ?: return
+                        val total = data["total"]?.toString()
+                        val distribucion = data["distribucion"]?.toString()
+                        val metodoDistribucion = data["metodo_distribucion"]?.toString()
+                        val alerta = data["alerta"]?.toString()
+                        val categorias = data["categorias"] as? Map<*, *>
 
-                        etTotal.setText(total)
-                        if (distribucion == "Fija") {
-                            rgTipo.check(R.id.radio_total)
-                        } else {
+                        etTotal.setText(total ?: "")
+
+                        if (distribucion == "Distribuido") {
                             rgTipo.check(R.id.radio_categorias)
                             containerDistribucion.visibility = View.VISIBLE
-                            rgMetodo.check(R.id.radio_cantidad)
 
-                            val catMap = map["categorias"] as? Map<*, *> ?: continue
-                            for ((key, value) in catMap) {
-                                val cat = key.toString()
-                                val valCat = value.toString()
-                                categoriasAsignadas[cat] = valCat
-
-                                val row = LinearLayout(this@Presupuestos)
-                                row.orientation = LinearLayout.HORIZONTAL
-                                row.tag = cat
-
-                                val textView = TextView(this@Presupuestos)
-                                textView.text = "$cat: $valCat"
-                                textView.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-
-                                val deleteBtn = Button(this@Presupuestos)
-                                deleteBtn.text = "X"
-                                deleteBtn.setOnClickListener {
-                                    layoutCategorias.removeView(row)
-                                    categoriasAsignadas.remove(cat)
-                                }
-
-                                row.addView(textView)
-                                row.addView(deleteBtn)
-                                layoutCategorias.addView(row)
+                            if (metodoDistribucion == "Porcentaje") {
+                                rgMetodo.check(R.id.radio_porcentaje)
+                            } else {
+                                rgMetodo.check(R.id.radio_cantidad)
                             }
+
+                            categorias?.forEach { (key, value) ->
+                                val categoria = key.toString()
+                                val cantidad = value.toString()
+                                categoriasAsignadas[categoria] = cantidad
+                                agregarCategoriaVisual(layoutCategorias, categoria, cantidad)
+                            }
+                        } else {
+                            rgTipo.check(R.id.radio_total)
                         }
 
-                        if (alerta.isNotEmpty()) {
+                        if (!alerta.isNullOrEmpty()) {
                             switchAlerta.isChecked = true
                             etAlerta.setText(alerta)
                         }
@@ -142,8 +105,71 @@ class Presupuestos : AppCompatActivity() {
                     }
                 }
 
-                override fun onCancelled(error: DatabaseError) {}
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(this@Presupuestos, "Error al cargar presupuesto", Toast.LENGTH_SHORT).show()
+                }
             })
+
+        // Agregar categoría manualmente
+        btnAgregarCategoria.setOnClickListener {
+            val categoria = spinner.selectedItem?.toString()?.trim() ?: return@setOnClickListener
+            val valor = etValorCategoria.text.toString().trim()
+            if (valor.isEmpty()) return@setOnClickListener
+
+            val metodoDistribucion = when (rgMetodo.checkedRadioButtonId) {
+                R.id.radio_cantidad -> "Cantidad"
+                R.id.radio_porcentaje -> "Porcentaje"
+                else -> "Cantidad"
+            }
+
+            val valorNumerico = valor.toDoubleOrNull()
+            if (valorNumerico == null || valorNumerico < 0) {
+                Toast.makeText(this, "Valor inválido", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Eliminar categoría si ya estaba, para actualizar valor
+            categoriasAsignadas.remove(categoria)
+            layoutCategorias.removeAllViews() // limpia para volver a mostrar todo actualizado
+
+            // Verificar suma total
+            val sumaExistente = categoriasAsignadas.values.sumOf { it.toDoubleOrNull() ?: 0.0 }
+            val limite = if (metodoDistribucion == "Cantidad") {
+                etTotal.text.toString().toDoubleOrNull() ?: 0.0
+            } else 100.0
+
+            if (sumaExistente + valorNumerico > limite) {
+                Toast.makeText(this, "Excede el límite del presupuesto", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Agregar al mapa
+            categoriasAsignadas[categoria] = valor
+
+            // Redibujar categorías
+            categoriasAsignadas.forEach { (cat, valStr) ->
+                val row = LinearLayout(this)
+                row.orientation = LinearLayout.HORIZONTAL
+
+                val textView = TextView(this)
+                textView.text = "$cat: $valStr"
+                textView.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+
+                val deleteBtn = Button(this)
+                deleteBtn.text = "X"
+                deleteBtn.setOnClickListener {
+                    layoutCategorias.removeView(row)
+                    categoriasAsignadas.remove(cat)
+                }
+
+                row.addView(textView)
+                row.addView(deleteBtn)
+                layoutCategorias.addView(row)
+            }
+
+            etValorCategoria.text.clear()
+        }
+
 
         btnGuardar.setOnClickListener {
             val total = etTotal.text.toString().trim()
@@ -152,41 +178,73 @@ class Presupuestos : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val tipoDistribucion = when (rgTipo.checkedRadioButtonId) {
-                R.id.radio_total -> "Fija"
-                R.id.radio_categorias -> "Distribuido"
-                else -> "Fija"
-            }
+            val tipoDistribucion = if (rgTipo.checkedRadioButtonId == R.id.radio_categorias) "Distribuido" else "Fija"
+            val metodoDistribucion = if (rgMetodo.checkedRadioButtonId == R.id.radio_porcentaje) "Porcentaje" else "Cantidad"
 
-            val categoriasFinal = if (tipoDistribucion == "Distribuido" && categoriasAsignadas.isNotEmpty())
-                categoriasAsignadas else null
+            val alerta = if (switchAlerta.isChecked) etAlerta.text.toString().trim() else null
 
-            val alertaFinal = if (switchAlerta.isChecked) {
-                etAlerta.text.toString().trim().takeIf { it.isNotEmpty() }
-            } else null
-
-            val dataMap = mutableMapOf<String, Any>(
+            val presupuestoMap = mutableMapOf<String, Any?>(
                 "usuario" to nombreUsuario,
                 "total" to total,
-                "distribucion" to tipoDistribucion
+                "distribucion" to tipoDistribucion,
+                "metodo_distribucion" to metodoDistribucion
             )
 
-            categoriasFinal?.let { dataMap["categorias"] = it }
-            alertaFinal?.let { dataMap["alerta"] = it }
+            if (tipoDistribucion == "Distribuido") {
+                presupuestoMap["categorias"] = categoriasAsignadas
+            }
 
-            val ref = if (presupuestoExistenteKey != null)
-                dbRef.child(presupuestoExistenteKey!!)
-            else
-                dbRef.push()
+            if (!alerta.isNullOrEmpty()) {
+                presupuestoMap["alerta"] = alerta
+            }
 
-            ref.setValue(dataMap).addOnSuccessListener {
-                Toast.makeText(this, "Presupuesto guardado", Toast.LENGTH_SHORT).show()
-                finish()
-            }.addOnFailureListener {
-                Toast.makeText(this, "Error al guardar", Toast.LENGTH_SHORT).show()
+            if (presupuestoExistenteKey != null) {
+                dbRef.child(presupuestoExistenteKey!!).setValue(presupuestoMap)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Presupuesto actualizado", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+            } else {
+                dbRef.push().setValue(presupuestoMap)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Presupuesto guardado", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
             }
         }
 
         btnVolver.setOnClickListener { finish() }
+    }
+
+    private fun agregarCategoriaVisual(layout: LinearLayout, categoria: String, valor: String) {
+        val row = LinearLayout(this)
+        row.orientation = LinearLayout.HORIZONTAL
+
+        val textView = TextView(this)
+        textView.text = "$categoria: $valor"
+        textView.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+
+        val deleteBtn = Button(this)
+        deleteBtn.text = "X"
+        deleteBtn.setOnClickListener {
+            layout.removeView(row)
+            categoriasAsignadas.remove(categoria)
+        }
+
+        row.addView(textView)
+        row.addView(deleteBtn)
+        layout.addView(row)
+    }
+
+    private fun esValorPermitido(valor: String, metodo: String, total: String, asignadas: Map<String, String>): Boolean {
+        val nuevoValor = valor.toDoubleOrNull() ?: return false
+        return if (metodo == "Porcentaje") {
+            val sumaActual = asignadas.values.sumOf { it.toDoubleOrNull() ?: 0.0 }
+            (sumaActual + nuevoValor) <= 100.0
+        } else {
+            val totalDouble = total.toDoubleOrNull() ?: return false
+            val sumaActual = asignadas.values.sumOf { it.toDoubleOrNull() ?: 0.0 }
+            (sumaActual + nuevoValor) <= totalDouble
+        }
     }
 }

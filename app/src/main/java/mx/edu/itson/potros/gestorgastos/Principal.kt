@@ -50,7 +50,6 @@ class Principal : AppCompatActivity() {
             val intent = Intent(this, Presupuestos::class.java)
             intent.putExtra("nombre_usuario", nombreUsuario)
             startActivity(intent)
-
         }
 
         findViewById<Button>(R.id.btn_ver_grafica).setOnClickListener {
