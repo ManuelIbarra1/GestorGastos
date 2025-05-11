@@ -35,7 +35,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Presupuesto"
+                android:text="@string/principal_txt_presupuesto"
                 android:textSize="12sp"
                 android:textColor="@color/black" />
         </LinearLayout>
@@ -62,7 +62,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Editar Usuario"
+                android:text="@string/principal_txt_editar_usuario"
                 android:textSize="12sp"
                 android:textColor="@color/black" />
         </LinearLayout>
@@ -85,7 +85,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ingresos del Mes"
+                android:text="@string/principal_txt_ingresos_mes"
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -110,7 +110,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gastos del Mes"
+                android:text="@string/principal_txt_gastos_mes"
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -141,7 +141,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Buscar gastos"
+            android:hint="@string/principal_hint_buscar_gasto"
             android:textColorHint="@color/black"
             android:textColor="@color/black"
             android:textSize="16sp"
@@ -162,7 +162,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:text="Gastos Recientes"
+        android:text="@string/principal_txt_gastos_recientes"
         android:textSize="18sp"
         android:textColor="@color/black"
         android:textStyle="bold" />
@@ -186,7 +186,7 @@
             android:id="@+id/btn_agregar_transaccion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Agregar Gasto / Ingreso"
+            android:text="@string/principal_btn_agregar_transaccion"
             android:textSize="18sp"
             android:textStyle="bold"
             android:background="@drawable/boton" />
@@ -195,7 +195,7 @@
             android:id="@+id/btn_ver_grafica"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ver Gráfica de Gastos"
+            android:text="@string/principal_btn_ver_grafica"
             android:textSize="18sp"
             android:textStyle="bold"
             android:background="@drawable/boton"

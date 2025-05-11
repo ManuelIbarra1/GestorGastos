@@ -33,7 +33,7 @@
             android:textStyle="bold"
             android:textSize="20sp"
             android:textColorHint="@color/white"
-            android:hint="@string/nombre_hint"/>
+            android:hint="@string/registro_hint_nombre"/>
 
         <EditText
             android:id="@+id/et_correo"
@@ -45,7 +45,7 @@
             android:textStyle="bold"
             android:textSize="20sp"
             android:textColorHint="@color/white"
-            android:hint="@string/correo_hint"
+            android:hint="@string/registro_hint_correo"
             android:layout_marginTop="16dp"/>
 
         <EditText
@@ -58,7 +58,7 @@
             android:textStyle="bold"
             android:textSize="20sp"
             android:textColorHint="@color/white"
-            android:hint="@string/contraseña_hint"
+            android:hint="@string/registro_hint_contraseña"
             android:layout_marginTop="16dp"/>
 
         <EditText
@@ -71,7 +71,7 @@
             android:textStyle="bold"
             android:textSize="20sp"
             android:textColorHint="@color/white"
-            android:hint="@string/confirmar_contraseña_hint"
+            android:hint="@string/registro_hint_confirmar_contraseña"
             android:layout_marginTop="16dp"/>
 
         <TextView
@@ -90,7 +90,7 @@
             android:id="@+id/btn_registrate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/btn_registrate"
+            android:text="@string/registro_btn_registrarse"
             android:textStyle="bold"
             android:textSize="20sp"
             android:background="@drawable/boton"
@@ -100,7 +100,7 @@
             android:id="@+id/btn_volver"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/btn_volver"
+            android:text="@string/registro_btn_volver"
             android:textStyle="bold"
             android:textSize="20sp"
             android:background="@drawable/boton"

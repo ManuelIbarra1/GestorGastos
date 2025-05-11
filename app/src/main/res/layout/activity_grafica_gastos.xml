@@ -13,14 +13,13 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Gráfica de Gastos"
+        android:text="@string/titulo_grafica_gastos"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/black"
         android:gravity="center_horizontal"
         android:layout_marginBottom="16dp" />
 
-    <!-- Selección del tipo de gráfico -->
     <RadioGroup
         android:id="@+id/radio_group_tipo_grafica"
         android:layout_width="match_parent"
@@ -33,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Por Fecha"
+            android:text="@string/radio_por_fecha"
             android:textColor="@color/black" />
 
         <RadioButton
@@ -41,12 +40,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Por Categoría"
+            android:text="@string/radio_por_categoria"
             android:textColor="@color/black"
             android:checked="true" />
     </RadioGroup>
 
-    <!-- Filtros: por fecha -->
     <LinearLayout
         android:id="@+id/filtro_fecha_layout"
         android:layout_width="match_parent"
@@ -60,7 +58,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Desde"
+            android:hint="@string/hint_fecha_desde"
             android:inputType="none"
             android:focusable="false"
             android:background="@drawable/spinner_background"
@@ -73,7 +71,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Hasta"
+            android:hint="@string/hint_fecha_hasta"
             android:inputType="none"
             android:focusable="false"
             android:background="@drawable/spinner_background"
@@ -83,7 +81,6 @@
             android:padding="12dp" />
     </LinearLayout>
 
-    <!-- Filtro: por categoría -->
     <Spinner
         android:id="@+id/spinner_filtro_categoria"
         android:layout_width="match_parent"
@@ -91,7 +88,6 @@
         android:background="@drawable/spinner_background"
         android:layout_marginBottom="16dp" />
 
-    <!-- Gráfico -->
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barChart"
         android:layout_width="match_parent"
@@ -99,7 +95,6 @@
         android:layout_weight="1"
         android:background="@android:color/white" />
 
-    <!-- Botones -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -112,7 +107,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Actualizar"
+            android:text="@string/btn_actualizar_grafica"
             android:textSize="16sp"
             android:textStyle="bold"
             android:background="@drawable/boton"
@@ -123,7 +118,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Salir"
+            android:text="@string/btn_salir"
             android:textSize="16sp"
             android:textStyle="bold"
             android:background="@drawable/boton" />

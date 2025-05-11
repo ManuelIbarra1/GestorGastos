@@ -15,7 +15,6 @@ class RegistroGastoIngreso : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registro_gasto_ingreso)
 
-        // Obtener referencias de UI
         val radioTipo = findViewById<RadioGroup>(R.id.radio_group_tipo_transaccion)
         val radioPago = findViewById<RadioGroup>(R.id.radio_group_tipo_pago)
         val etMonto = findViewById<EditText>(R.id.et_monto)
@@ -27,7 +26,6 @@ class RegistroGastoIngreso : AppCompatActivity() {
 
         etFecha.setOnClickListener { showDatePickerDialog() }
 
-        // Verificar si es modo edición
         val modo = intent.getStringExtra("modo")
         val idTransaccion = intent.getStringExtra("id")
         nombreUsuario = intent.getStringExtra("nombre_usuario") ?: intent.getStringExtra("usuario") ?: ""
@@ -54,7 +52,6 @@ class RegistroGastoIngreso : AppCompatActivity() {
             }
         }
 
-        // Guardar o actualizar
         btnGuardar.setOnClickListener {
             val tipoSeleccionado = findViewById<RadioButton>(radioTipo.checkedRadioButtonId)?.text.toString()
             val tipoPagoSeleccionado = if (tipoSeleccionado == "Gasto")
@@ -66,7 +63,6 @@ class RegistroGastoIngreso : AppCompatActivity() {
             val categoria = if (tipoSeleccionado == "Gasto") etCategoria.text.toString().trim() else null
             val fecha = etFecha.text.toString().trim()
 
-            // Validación
             if (cantidad.isEmpty() || descripcion.isEmpty() || fecha.isEmpty() ||
                 (tipoSeleccionado == "Gasto" && (categoria.isNullOrEmpty() || tipoPagoSeleccionado.isNullOrEmpty()))) {
                 Toast.makeText(this, "Por favor llena todos los campos obligatorios", Toast.LENGTH_SHORT).show()
@@ -84,7 +80,6 @@ class RegistroGastoIngreso : AppCompatActivity() {
             )
 
             if (modo == "editar" && !idTransaccion.isNullOrEmpty()) {
-                // Actualizar
                 dbRefTransacciones.child(idTransaccion).setValue(transaccion)
                     .addOnSuccessListener {
                         Toast.makeText(this, "Transacción actualizada", Toast.LENGTH_SHORT).show()
@@ -94,12 +89,10 @@ class RegistroGastoIngreso : AppCompatActivity() {
                         Toast.makeText(this, "Error al actualizar", Toast.LENGTH_SHORT).show()
                     }
             } else {
-                // Nuevo
                 dbRefTransacciones.push().setValue(transaccion)
                 Toast.makeText(this, "Transacción guardada", Toast.LENGTH_SHORT).show()
             }
 
-            // Guardar categoría si es gasto
             if (!categoria.isNullOrEmpty()) {
                 dbRefCategorias.orderByChild("nombre").equalTo(categoria)
                     .addListenerForSingleValueEvent(object : ValueEventListener {

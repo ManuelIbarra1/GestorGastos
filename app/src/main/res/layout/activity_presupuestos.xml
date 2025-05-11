@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Presupuesto Mensual"
+        android:text="@string/titulo_presupuesto_mensual"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -24,7 +24,7 @@
         android:id="@+id/et_presupuesto_total"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Presupuesto Mensual Total"
+        android:hint="@string/hint_presupuesto_total"
         android:inputType="numberDecimal"
         android:textColorHint="@color/black"
         android:textColor="@color/black"
@@ -34,7 +34,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tipo de asignación:"
+        android:text="@string/texto_tipo_asignacion"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:layout_marginBottom="8dp"/>
@@ -51,7 +51,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Presupuesto Total"
+            android:text="@string/radio_presupuesto_total"
             android:textColor="@color/black"
             android:textSize="16sp"/>
 
@@ -60,7 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Por Categorías"
+            android:text="@string/radio_por_categorias"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:checked="true"/>
@@ -76,7 +76,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Método de distribución:"
+            android:text="@string/texto_metodo_distribucion"
             android:textColor="@color/black"
             android:textSize="16sp"/>
 
@@ -92,7 +92,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Cantidad Fija"
+                android:text="@string/radio_cantidad_fija"
                 android:textColor="@color/black"/>
 
             <RadioButton
@@ -100,7 +100,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Porcentaje"
+                android:text="@string/radio_porcentaje"
                 android:textColor="@color/black"/>
         </RadioGroup>
 
@@ -124,7 +124,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Valor a asignar"
+                android:hint="@string/hint_valor_a_asignar"
                 android:inputType="numberDecimal"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
@@ -134,7 +134,7 @@
                 android:id="@+id/btn_agregar_categoria"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Agregar"
+                android:text="@string/btn_agregar_categoria"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/boton"
                 android:textSize="14sp" />
@@ -170,7 +170,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Alerta si se supera (%)"
+            android:hint="@string/hint_alerta_porcentaje"
             android:inputType="number"
             android:textColorHint="@color/black"
             android:textColor="@color/black"
@@ -187,7 +187,7 @@
         android:id="@+id/btn_guardar_presupuesto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Guardar Presupuesto"
+        android:text="@string/btn_guardar_presupuesto"
         android:textSize="18sp"
         android:textStyle="bold"
         android:background="@drawable/boton" />
@@ -196,7 +196,7 @@
         android:id="@+id/btn_volver_presupuesto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Volver"
+        android:text="@string/btn_volver"
         android:textSize="18sp"
         android:textStyle="bold"
         android:background="@drawable/boton"

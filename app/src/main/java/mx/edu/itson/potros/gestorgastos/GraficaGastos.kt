@@ -1,10 +1,13 @@
 package mx.edu.itson.potros.gestorgastos
 
 import android.app.DatePickerDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
@@ -27,6 +30,15 @@ class GraficaGastos : AppCompatActivity() {
     private lateinit var filtroFechaLayout: LinearLayout
     private lateinit var btnActualizar: Button
     private lateinit var btnSalir: Button
+
+    private val coloresDisponibles = ColorTemplate.MATERIAL_COLORS.toMutableList()
+    private val coloresPorCategoria = mutableMapOf(
+        "Alimentos" to Color.rgb(46, 204, 113),
+        "Transporte" to Color.rgb(52, 152, 219),
+        "Entretenimiento" to Color.rgb(241, 196, 15),
+        "Salud" to Color.rgb(231, 76, 60),
+        "Otros" to Color.rgb(155, 89, 182)
+    )
 
     private val formatoFecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
@@ -119,16 +131,22 @@ class GraficaGastos : AppCompatActivity() {
                         return
                     }
 
+                    val labels = datos.keys.toList()
                     val entries = datos.entries.mapIndexed { index, entry ->
                         BarEntry(index.toFloat(), entry.value)
                     }
-                    val labels = datos.keys.toList()
+
+                    val colors = labels.map { categoria ->
+                        coloresPorCategoria.getOrPut(categoria) {
+                            coloresDisponibles.removeFirstOrNull() ?: Color.GRAY
+                        }
+                    }
 
                     val dataSet = BarDataSet(entries, "Gastos por categoría")
-                    dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
-                    val data = BarData(dataSet)
+                    dataSet.colors = colors
+                    dataSet.setDrawValues(true)
 
-                    barChart.data = data
+                    barChart.data = BarData(dataSet)
                     barChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
                     barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
                     barChart.xAxis.granularity = 1f
@@ -136,6 +154,12 @@ class GraficaGastos : AppCompatActivity() {
                     barChart.axisLeft.axisMinimum = 0f
                     barChart.axisRight.isEnabled = false
                     barChart.description.isEnabled = false
+
+                    barChart.legend.isEnabled = true
+                    barChart.legend.setCustom(colors.mapIndexed { index, color ->
+                        LegendEntry(labels[index], Legend.LegendForm.DEFAULT, 10f, 2f, null, color)
+                    })
+
                     barChart.invalidate()
                 }
 
@@ -162,6 +186,7 @@ class GraficaGastos : AppCompatActivity() {
         val lista = mutableListOf<BarEntry>()
         val colores = mutableListOf<Int>()
         val etiquetas = mutableListOf<String>()
+        val leyendaPorCategoria = mutableMapOf<String, Int>()
 
         database.orderByChild("usuario").equalTo(nombreUsuario)
             .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -175,9 +200,15 @@ class GraficaGastos : AppCompatActivity() {
                                 val fechaTrans = formatoFecha.parse(fecha)
                                 if (fechaTrans != null && !fechaTrans.before(f1) && !fechaTrans.after(f2)) {
                                     val monto = trans.cantidad?.toFloatOrNull() ?: continue
+                                    val categoria = trans.categoria ?: "Otros"
+                                    val color = coloresPorCategoria.getOrPut(categoria) {
+                                        coloresDisponibles.removeFirstOrNull() ?: Color.GRAY
+                                    }
+
                                     lista.add(BarEntry(index.toFloat(), monto))
                                     etiquetas.add(trans.descipcion ?: "")
-                                    colores.add(ColorTemplate.MATERIAL_COLORS.random())
+                                    colores.add(color)
+                                    leyendaPorCategoria[categoria] = color
                                     index++
                                 }
                             } catch (_: Exception) {}
@@ -202,6 +233,12 @@ class GraficaGastos : AppCompatActivity() {
                     barChart.axisLeft.axisMinimum = 0f
                     barChart.axisRight.isEnabled = false
                     barChart.description.isEnabled = false
+
+                    barChart.legend.isEnabled = true
+                    barChart.legend.setCustom(leyendaPorCategoria.map { (categoria, color) ->
+                        LegendEntry(categoria, Legend.LegendForm.DEFAULT, 10f, 2f, null, color)
+                    })
+
                     barChart.invalidate()
                 }
 

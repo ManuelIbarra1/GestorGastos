@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Registrar Gasto o Ingreso"
+        android:text="@string/registro_transaccion_titulo"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -32,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Gasto"
+            android:text="@string/registro_transaccion_radio_gasto"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:checked="true"/>
@@ -42,7 +42,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Ingreso"
+            android:text="@string/registro_transaccion_radio_ingreso"
             android:textColor="@color/black"
             android:textSize="16sp"/>
 
@@ -52,7 +52,7 @@
         android:id="@+id/et_monto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Monto"
+        android:hint="@string/registro_transaccion_hint_monto"
         android:inputType="numberDecimal"
         android:textColorHint="@color/black"
         android:textColor="@color/black"
@@ -63,7 +63,7 @@
         android:id="@+id/et_descripcion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Descripción"
+        android:hint="@string/registro_transaccion_hint_descripcion"
         android:inputType="text"
         android:textColorHint="@color/black"
         android:textColor="@color/black"
@@ -80,7 +80,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Categoría"
+            android:text="@string/registro_transaccion_label_categoria"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:layout_marginBottom="8dp"/>
@@ -89,7 +89,7 @@
             android:id="@+id/et_categoria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Categoría"
+            android:hint="@string/registro_transaccion_hint_categoria"
             android:textColorHint="@color/black"
             android:textColor="@color/black"
             android:textSize="18sp"
@@ -107,7 +107,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tipo de Pago"
+            android:text="@string/registro_transaccion_label_tipo_pago"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:layout_marginBottom="8dp"/>
@@ -123,7 +123,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Tarjeta"
+                android:text="@string/registro_transaccion_radio_tarjeta"
                 android:textColor="@color/black"
                 android:textSize="16sp"/>
 
@@ -132,7 +132,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Efectivo"
+                android:text="@string/registro_transaccion_radio_efectivo"
                 android:textColor="@color/black"
                 android:textSize="16sp"/>
 
@@ -149,7 +149,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fecha"
+            android:text="@string/registro_transaccion_label_fecha"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:layout_marginBottom="8dp"/>
@@ -158,7 +158,7 @@
             android:id="@+id/et_fecha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Seleccionar Fecha"
+            android:hint="@string/registro_transaccion_hint_fecha"
             android:focusable="false"
             android:clickable="false"
             android:textColorHint="@color/black"
@@ -171,7 +171,7 @@
         android:id="@+id/btn_guardar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Guardar"
+        android:text="@string/registro_transaccion_btn_guardar"
         android:textSize="18sp"
         android:textStyle="bold"
         android:background="@drawable/boton"/>
@@ -180,7 +180,7 @@
         android:id="@+id/btn_cancelar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cancelar"
+        android:text="@string/registro_transaccion_btn_cancelar"
         android:textSize="18sp"
         android:textStyle="bold"
         android:background="@drawable/boton"

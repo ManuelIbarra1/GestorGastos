@@ -1,17 +1,85 @@
 <resources>
     <string name="app_name">GestorGastos</string>
 
-    <string name="eslogan">Gestiona tus gastos, simplifica tu vida</string>
-
-    <string name="correo_hint">Correo electrónico</string>
-    <string name="contraseña_hint">Contraseña</string>
-    <string name="nombre_hint">Nombre</string>
-    <string name="confirmar_contraseña_hint">Confirmar Contraseña</string>
-
+    <!-- IniciarSesion layout -->
+    <string name="eslogan_iniciar_sesion">Gestiona tus gastos, simplifica tu vida</string>
+    <string name="hint_correo">Correo electrónico</string>
+    <string name="hint_contraseña">Contraseña</string>
     <string name="btn_iniciar_sesion">Iniciar Sesión</string>
-    <string name="btn_registrate">Regístrate</string>
-    <string name="btn_volver">Volver</string>
+    <string name="btn_ir_a_registro">Regístrate</string>
 
+    <!-- Configuracion layout -->
+    <string name="configuracion_titulo">Configuración</string>
+    <string name="hint_nombre">Nombre</string>
+    <string name="hint_correo_electronico">Correo Electrónico</string>
+    <string name="titulo_cambiar_contrasena">Cambiar Contraseña</string>
+    <string name="hint_contrasena_actual">Contraseña Actual</string>
+    <string name="hint_nueva_contrasena">Nueva Contraseña</string>
+    <string name="hint_confirmar_nueva_contrasena">Confirmar Nueva Contraseña</string>
+    <string name="btn_guardar_cambios">Guardar Cambios</string>
+    <string name="btn_cancelar">Cancelar</string>
+    <string name="btn_cerrar_sesion">Cerrar Sesión</string>
+
+    <!-- GraficaGastos layout -->
+    <string name="titulo_grafica_gastos">Gráfica de Gastos</string>
+    <string name="radio_por_fecha">Por Fecha</string>
+    <string name="radio_por_categoria">Por Categoría</string>
+    <string name="hint_fecha_desde">Desde</string>
+    <string name="hint_fecha_hasta">Hasta</string>
+    <string name="btn_actualizar_grafica">Actualizar</string>
+    <string name="btn_salir">Salir</string>
+
+    <!-- Prompts generales -->
     <string name="prompt_filtrar_fecha">Filtrar por Fecha</string>
     <string name="prompt_filtrar_categoria">Filtrar por Categoría</string>
+
+    <!-- Presupuestos layout -->
+    <string name="titulo_presupuesto_mensual">Presupuesto Mensual</string>
+    <string name="hint_presupuesto_total">Presupuesto Mensual Total</string>
+    <string name="texto_tipo_asignacion">Tipo de asignación:</string>
+    <string name="radio_presupuesto_total">Presupuesto Total</string>
+    <string name="radio_por_categorias">Por Categorías</string>
+    <string name="texto_metodo_distribucion">Método de distribución:</string>
+    <string name="radio_cantidad_fija">Cantidad Fija</string>
+    <string name="radio_porcentaje">Porcentaje</string>
+    <string name="hint_valor_a_asignar">Valor a asignar</string>
+    <string name="btn_agregar_categoria">Agregar</string>
+    <string name="hint_alerta_porcentaje">Alerta si se supera (%)</string>
+    <string name="btn_guardar_presupuesto">Guardar Presupuesto</string>
+    <string name="btn_volver">Volver</string>
+
+    <!-- Principal layout -->
+    <string name="principal_txt_presupuesto">Presupuesto</string>
+    <string name="principal_txt_editar_usuario">Editar Usuario</string>
+    <string name="principal_txt_ingresos_mes">Ingresos del Mes</string>
+    <string name="principal_txt_gastos_mes">Gastos del Mes</string>
+    <string name="principal_hint_buscar_gasto">Buscar gastos</string>
+    <string name="principal_txt_gastos_recientes">Gastos Recientes</string>
+    <string name="principal_btn_agregar_transaccion">Agregar Gasto / Ingreso</string>
+    <string name="principal_btn_ver_grafica">Ver Gráfica de Gastos</string>
+
+    <!-- Registro layout -->
+    <string name="registro_hint_nombre">Nombre</string>
+    <string name="registro_hint_correo">Correo electrónico</string>
+    <string name="registro_hint_contraseña">Contraseña</string>
+    <string name="registro_hint_confirmar_contraseña">Confirmar contraseña</string>
+    <string name="registro_btn_registrarse">Regístrate</string>
+    <string name="registro_btn_volver">Volver</string>
+
+    <!-- RegistroGastoIngreso layout -->
+    <string name="registro_transaccion_titulo">Registrar Gasto o Ingreso</string>
+    <string name="registro_transaccion_radio_gasto">Gasto</string>
+    <string name="registro_transaccion_radio_ingreso">Ingreso</string>
+    <string name="registro_transaccion_hint_monto">Monto</string>
+    <string name="registro_transaccion_hint_descripcion">Descripción</string>
+    <string name="registro_transaccion_label_categoria">Categoría</string>
+    <string name="registro_transaccion_hint_categoria">Categoría</string>
+    <string name="registro_transaccion_label_tipo_pago">Tipo de Pago</string>
+    <string name="registro_transaccion_radio_tarjeta">Tarjeta</string>
+    <string name="registro_transaccion_radio_efectivo">Efectivo</string>
+    <string name="registro_transaccion_label_fecha">Fecha</string>
+    <string name="registro_transaccion_hint_fecha">Seleccionar Fecha</string>
+    <string name="registro_transaccion_btn_guardar">Guardar</string>
+    <string name="registro_transaccion_btn_cancelar">Cancelar</string>
+
 </resources>

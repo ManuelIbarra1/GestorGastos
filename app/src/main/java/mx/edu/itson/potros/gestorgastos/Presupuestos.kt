@@ -17,7 +17,6 @@ class Presupuestos : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_presupuestos)
 
-        // Referencias UI
         val etTotal = findViewById<EditText>(R.id.et_presupuesto_total)
         val rgTipo = findViewById<RadioGroup>(R.id.radio_group_tipo)
         val rgMetodo = findViewById<RadioGroup>(R.id.radio_group_metodo)
@@ -31,11 +30,9 @@ class Presupuestos : AppCompatActivity() {
         val btnVolver = findViewById<Button>(R.id.btn_volver_presupuesto)
         val containerDistribucion = findViewById<LinearLayout>(R.id.container_distribucion)
 
-        // Firebase
         dbRef = FirebaseDatabase.getInstance().getReference("Presupuestos")
         nombreUsuario = intent.getStringExtra("nombre_usuario") ?: ""
 
-        // Cargar categorías al spinner
         FirebaseDatabase.getInstance().getReference("Categorias")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -50,7 +47,6 @@ class Presupuestos : AppCompatActivity() {
                 override fun onCancelled(error: DatabaseError) {}
             })
 
-        // Mostrar u ocultar sección de distribución
         rgTipo.setOnCheckedChangeListener { _, checkedId ->
             containerDistribucion.visibility = if (checkedId == R.id.radio_categorias) View.VISIBLE else View.GONE
         }
@@ -60,7 +56,6 @@ class Presupuestos : AppCompatActivity() {
             categoriasAsignadas.clear()
         }
 
-        // Cargar presupuesto existente
         dbRef.orderByChild("usuario").equalTo(nombreUsuario)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -110,7 +105,6 @@ class Presupuestos : AppCompatActivity() {
                 }
             })
 
-        // Agregar categoría manualmente
         btnAgregarCategoria.setOnClickListener {
             val categoria = spinner.selectedItem?.toString()?.trim() ?: return@setOnClickListener
             val valor = etValorCategoria.text.toString().trim()
@@ -128,47 +122,29 @@ class Presupuestos : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Eliminar categoría si ya estaba, para actualizar valor
-            categoriasAsignadas.remove(categoria)
-            layoutCategorias.removeAllViews() // limpia para volver a mostrar todo actualizado
+            val sumaActual = categoriasAsignadas
+                .filterKeys { it != categoria }
+                .values.sumOf { it.toDoubleOrNull() ?: 0.0 }
 
-            // Verificar suma total
-            val sumaExistente = categoriasAsignadas.values.sumOf { it.toDoubleOrNull() ?: 0.0 }
             val limite = if (metodoDistribucion == "Cantidad") {
                 etTotal.text.toString().toDoubleOrNull() ?: 0.0
             } else 100.0
 
-            if (sumaExistente + valorNumerico > limite) {
+            if (sumaActual + valorNumerico > limite) {
                 Toast.makeText(this, "Excede el límite del presupuesto", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Agregar al mapa
             categoriasAsignadas[categoria] = valor
 
-            // Redibujar categorías
+            layoutCategorias.removeAllViews()
             categoriasAsignadas.forEach { (cat, valStr) ->
-                val row = LinearLayout(this)
-                row.orientation = LinearLayout.HORIZONTAL
-
-                val textView = TextView(this)
-                textView.text = "$cat: $valStr"
-                textView.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-
-                val deleteBtn = Button(this)
-                deleteBtn.text = "X"
-                deleteBtn.setOnClickListener {
-                    layoutCategorias.removeView(row)
-                    categoriasAsignadas.remove(cat)
-                }
-
-                row.addView(textView)
-                row.addView(deleteBtn)
-                layoutCategorias.addView(row)
+                agregarCategoriaVisual(layoutCategorias, cat, valStr)
             }
 
             etValorCategoria.text.clear()
         }
+
 
 
         btnGuardar.setOnClickListener {
