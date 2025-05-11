@@ -25,20 +25,16 @@ class Principal : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_principal)
 
-        // Obtener nombre y correo del intent
         nombreUsuario = intent.getStringExtra("nombre_usuario") ?: ""
         correoUsuario = intent.getStringExtra("correo_usuario") ?: ""
 
-        // Configurar RecyclerView
         recyclerView = findViewById(R.id.rv_gastos_por_categoria)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Firebase
         transaccionesRef = FirebaseDatabase.getInstance().getReference("Transacciones")
 
         cargarTransacciones()
 
-        // Botones
         findViewById<ImageView>(R.id.btn_agregar_presupuesto).setOnClickListener {
             startActivity(Intent(this, Presupuesto::class.java))
         }
@@ -50,14 +46,15 @@ class Principal : AppCompatActivity() {
             startActivityForResult(intent, 1)
         }
 
-        findViewById<Button>(R.id.btn_agregar_transaccion).setOnClickListener {
-            val intent = Intent(this, RegistroGastoIngreso::class.java)
+        findViewById<ImageView>(R.id.btn_agregar_presupuesto).setOnClickListener {
+            val intent = Intent(this, Presupuestos::class.java)
             intent.putExtra("nombre_usuario", nombreUsuario)
             startActivity(intent)
+
         }
 
         findViewById<Button>(R.id.btn_ver_grafica).setOnClickListener {
-            // startActivity(Intent(this, GraficaGastos::class.java))
+            startActivity(Intent(this, GraficaGastos::class.java))
         }
     }
 
@@ -122,7 +119,6 @@ class Principal : AppCompatActivity() {
         startActivity(intent)
     }
 
-    // Recibir datos actualizados desde Configuracion
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -134,8 +130,6 @@ class Principal : AppCompatActivity() {
             if (!nuevoCorreo.isNullOrEmpty()) correoUsuario = nuevoCorreo
 
             Toast.makeText(this, "Datos actualizados localmente", Toast.LENGTH_SHORT).show()
-            // Si tienes un TextView con el nombre en pantalla, actualízalo aquí también
-            // findViewById<TextView>(R.id.tv_nombre_usuario).text = nombreUsuario
         }
     }
 }

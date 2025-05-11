@@ -15,7 +15,6 @@ class Configuracion : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_configuracion)
 
-        // UI references
         val etNombre = findViewById<EditText>(R.id.et_nombre_config)
         val etCorreo = findViewById<EditText>(R.id.et_correo_config)
         val etContraActual = findViewById<EditText>(R.id.et_contrasena_actual_config)
@@ -25,11 +24,9 @@ class Configuracion : AppCompatActivity() {
         val btnCancelar = findViewById<Button>(R.id.btn_cancelar_config)
         val btnCerrarSesion = findViewById<Button>(R.id.btn_cerrar_sesion)
 
-        // Obtener datos del Intent
         val nombreUsuario = intent.getStringExtra("nombre_usuario") ?: ""
         val correoUsuario = intent.getStringExtra("correo_usuario") ?: ""
 
-        // Mostrar en los campos
         etNombre.setText(nombreUsuario)
         etCorreo.setText(correoUsuario)
 
@@ -52,7 +49,6 @@ class Configuracion : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Buscar al usuario por correo y validar contraseña
             userRef.orderByChild("correo").equalTo(correoUsuario)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {

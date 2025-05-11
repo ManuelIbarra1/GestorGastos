@@ -104,103 +104,102 @@
                 android:textColor="@color/black"/>
         </RadioGroup>
 
+        <Spinner
+            android:id="@+id/spinner_categoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/spinner_background" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="16dp">
-
-            <Spinner
-                android:id="@+id/spinner_categorias"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:background="@drawable/spinner_background"/>
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
 
             <EditText
-                android:id="@+id/et_valor"
+                android:id="@+id/et_valor_categoria"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:hint="Valor"
+                android:hint="Valor a asignar"
                 android:inputType="numberDecimal"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="16sp" />
 
+            <Button
+                android:id="@+id/btn_agregar_categoria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Agregar"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/boton"
+                android:textSize="14sp" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_categorias_agregadas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp" />
+
+        <ProgressBar
+            android:id="@+id/barra_progreso_presupuesto"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress="0"
+            android:max="100"
+            android:layout_marginBottom="24dp" />
+
     </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Distribución actual:"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:layout_marginBottom="8dp"/>
-
-    <Spinner
-        android:id="@+id/spinner_categoria"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@drawable/spinner_background" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_distribucion"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="8dp"
-        tools:listitem="@layout/item_gasto"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="16dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <EditText
-                android:id="@+id/et_porcentaje_alerta"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="% para alerta (ej: 80)"
-                android:inputType="number"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
-                android:textSize="16sp"
-                android:enabled="false"/>
-
-            <Switch
-                android:id="@+id/switch_alertas"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="24dp">
 
         <EditText
-            android:id="@+id/et_umbral_alerta"
-            android:layout_width="match_parent"
+            android:id="@+id/et_porcentaje_alerta"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Umbral de alerta (%)"
+            android:layout_weight="1"
+            android:hint="Alerta si se supera (%)"
             android:inputType="number"
-            android:visibility="gone"
-            android:textColor="@color/black"/>
+            android:textColorHint="@color/black"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <Switch
+            android:id="@+id/switch_activar_alerta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp" />
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_guardar"
+        android:id="@+id/btn_guardar_presupuesto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="GUARDAR PRESUPUESTO"
+        android:text="Guardar Presupuesto"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:background="@drawable/boton" />
+
+    <Button
+        android:id="@+id/btn_volver_presupuesto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Volver"
+        android:textSize="18sp"
+        android:textStyle="bold"
         android:background="@drawable/boton"
-        android:textColor="@color/white"/>
+        android:layout_marginTop="16dp"/>
 
 </LinearLayout>
